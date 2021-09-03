@@ -8,9 +8,8 @@
     <section>
         <base-card>
             <div class="controls">
-                <base-button mode="outline" @click="loadCoaches">Refresh</base-button>
-                <!-- <button>Refresh</button> -->
-                <!-- <router-link to="/register">Register as Coach</router-link> -->
+                <base-button mode="outline" @click="loadCoaches(true)">Refresh</base-button>
+    
                 <base-button v-if="!isCoach  && !isloading" link to="/register">Register as Coach</base-button>
             </div>
             <div v-if="isloading">
@@ -86,15 +85,18 @@ export default {
             return  !this.isloading && this.$store.getters['coaches/hasCoaches']
         }
     },
+    created(){
+        this.loadCoaches();
+    },
 
     methods:{
         setFilters(updatedFilters){
             this.activeFilters = updatedFilters;
         },
-        async loadCoaches(){
+        async loadCoaches(refresh = false){
             this.isloading = true;
             try{
-                await this.$store.dispatch('coaches/loadCoaches'); 
+                await this.$store.dispatch('coaches/loadCoaches',{forceRefresh: refresh}); 
             } catch(error){
                 // 當try 裡面的內容有錯誤
                 // catch error 也會出現try的內容錯誤
@@ -106,9 +108,7 @@ export default {
             this.error = null
         },
     },
-    created(){
-        this.loadCoaches();
-    },
+
 }
 </script>
 
