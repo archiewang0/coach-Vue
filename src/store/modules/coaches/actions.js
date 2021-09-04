@@ -2,6 +2,7 @@ export default {
     // 這裡專門把data送入serve的
     async registerCoach(context,data){
         const userId = context.rootGetters.userId
+        console.log(context.rootGetters)
         const coachData = {
             firstName: data.first,
             lastName: data.last,
@@ -10,9 +11,11 @@ export default {
             areas: data.areas,
         }
 
+        const token = context.rootGetters.token
+
         // 前面輸入 database網址 後面再給他檔案名稱跟類型
         // userid 作為json的檔案名稱 該檔案名稱內會有存相關的內容
-        const response = await fetch(`https://udemy-vue-coach-database-default-rtdb.firebaseio.com/coaches/${userId}.json`,{
+        const response = await fetch(`https://udemy-vue-coach-database-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=${token}`,{
             method: 'PUT',
             // put 是將內容新增或是更新上去
             body: JSON.stringify(coachData)
